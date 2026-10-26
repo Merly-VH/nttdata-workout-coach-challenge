@@ -1,37 +1,80 @@
-# NTT DATA — Workout Coach Frontend Challenge
+# Workout Coach: reto Frontend NTT DATA
 
-Este repositorio contiene el código base del reto técnico Frontend de NTT DATA. La aplicación **ya funciona**; tu objetivo no es reconstruirla desde cero, sino evolucionar una base legacy de forma segura, trazable y sostenible.
+![CI](https://github.com/<tu-usuario>/<repo>/actions/workflows/ci.yml/badge.svg)
+
+Evolución de una aplicación Angular legacy a **Clean Architecture** con separación
+**Container / Presentational**, **Angular moderno** (signals, `input()`/`output()`, `@if`/`@for`,
+`OnPush`, zoneless) y **entrenamiento completo**: lista de ejercicios con avance automático y estados
+_Pending / In progress / Completed_. Desarrollada con **Spec-Driven Development**.
 
 ## Requisitos
 
-- Node.js 20+ o 22+
+- Node.js `^20.19.0 || ^22.12.0 || >=24.0.0` (desarrollado con Node 24)
 - npm 10+
-- Angular CLI 20+
+- Google Chrome (tests con Karma)
+
+No es necesario instalar Angular CLI global: los scripts usan el CLI local (Angular 20.3).
 
 ## Ejecución
 
 ```bash
 npm install
-npm start
+npm start            # http://localhost:4200
 ```
 
-Luego abre `http://localhost:4200`.
+## Scripts
 
-## Build y tests
+| Script                            | Descripción                                         |
+| --------------------------------- | --------------------------------------------------- |
+| `npm run build`                   | Build de producción                                 |
+| `npm test`                        | Tests (Karma + Jasmine, abre Chrome)                |
+| `npm run test:ci`                 | Tests en Chrome headless                            |
+| `npm run test:coverage`           | Tests con cobertura (`coverage/`)                   |
+| `npm run lint`                    | ESLint (incluye reglas de dependencias entre capas) |
+| `npm run format` / `format:check` | Prettier                                            |
 
-```bash
-npm run build
-npm test
+## Documentación
+
+- **Spec (fuente de verdad):** [`docs/spec/workout-refactor.md`](docs/spec/workout-refactor.md):
+  contexto, alcance, decisiones, modelo de dominio, flujo de datos, criterios de aceptación,
+  evidencias y diseño de microfrontends/NgRx.
+- **ADR:** [`docs/adr/ADR-001-zoneless.md`](docs/adr/ADR-001-zoneless.md)
+- **Enunciado:** [`docs/CHALLENGE.md`](docs/CHALLENGE.md)
+
+## Arquitectura
+
+```text
+src/app/
+├─ app.config.ts                 composition root: puerto → adaptador, zoneless
+└─ features/workout/
+   ├─ domain/                    TypeScript puro: modelos, reglas (funciones puras), puerto WorkoutRepository
+   ├─ application/               caso de uso, puerto Ticker, WorkoutSessionStore (signals)
+   ├─ infrastructure/            DTO snake_case + mapper, MockWorkoutRepository, IntervalTicker
+   └─ presentation/              WorkoutPage (container) + Timer, ExerciseList, ExerciseItem, Toast
 ```
 
-## Instrucciones del reto
+Reglas de dependencia (verificadas por `npm run lint`): `domain` no importa Angular ni otras capas;
+`application` solo depende de `domain`; `presentation` no importa `infrastructure`.
 
-Lee **`docs/CHALLENGE.md`** antes de modificar código. La especificación que prepares debe quedar versionada dentro de este repositorio.
+## Calidad
 
-## Entrega
+- 53 tests: reglas de dominio (CA-1…CA-12), caso de uso y store con dobles de puertos,
+  mapper, `IntervalTicker` con `fakeAsync` estricto, componentes presentacionales e integración del container.
+- Lint: 9 errores en el código legacy → 0.
+- CI (GitHub Actions): formato, lint, build y tests con cobertura en cada push.
 
-Entrega tu repositorio/fork/rama con historial de commits, spec, implementación y tests. Se podrá realizar una sustentación breve sobre tu propia solución.
+## Punto de partida
+
+La base recibida no compilaba (`index.html` ausente, zone.js no instalado, `@types/jasmine` ausente,
+`serve` sin `buildTarget`). Se reparó con cambios mínimos en el commit `fix(build)` antes de evolucionarla.
+Detalle en la §1.1 de la spec.
 
 ## Uso de IA
 
-Puedes utilizar herramientas de IA como parte de tu proceso habitual. Su uso no penaliza. Debes comprender y poder explicar todo el código y las decisiones incluidas en tu entrega.
+Se utilizó Claude como apoyo para el análisis, la redacción de la spec y la propuesta de código.
+Todo el código fue revisado, ejecutado y verificado por la autora paso a paso (commits pequeños,
+tests y lint en cada uno).
+
+## Autora
+
+Merly Vallejos
