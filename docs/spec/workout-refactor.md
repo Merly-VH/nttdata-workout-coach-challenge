@@ -60,19 +60,21 @@ Estado inicial de lint (`npm run lint`): **9 errores** (3 `no-explicit-any`, 1 `
 
 ## 3. Decisiones
 
-| ID  | Decisión                                                                               | Motivo                                                                                                                                                                        |
-| --- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| D1  | zone.js en la línea base; zoneless al final                                            | Preservar el legacy (muta campos sin signals) hasta que todo el estado sea signals                                                                                            |
-| D2  | Mantener Karma + Jasmine                                                               | Tooling del proyecto; no se cambia sin necesidad                                                                                                                              |
-| D3  | El repositorio devuelve `Observable`                                                   | Simula una fuente asíncrona (HTTP) y permite probar el camino de error                                                                                                        |
-| D4  | El puerto del dominio usa solo `import type { Observable } from 'rxjs'`                | El CHALLENGE ubica el puerto en `domain`; rxjs es una librería de tipos, no el framework. La regla de lint prohíbe `@angular/*` en `domain`. Trade-off aceptado y documentado |
-| D5  | Descanso también tras la última repetición de cada ejercicio                           | Comportamiento legacy y criterio "al terminar descanso se incrementa la repetición"                                                                                           |
-| D6  | Textos de UI en inglés; estados mostrados como `Pending` / `In progress` / `Completed` | Coherencia con el legacy                                                                                                                                                      |
-| D7  | Estado de sesión explícito: `idle`, `running`, `paused`, `finished`                    | Distinguir "no iniciada" de "pausada" (Start inicia o reanuda)                                                                                                                |
-| D8  | Al finalizar, el contador muestra `00:00` y Start queda deshabilitado                  | Corrige un defecto legacy: tras terminar, Start volvía a correr la sesión con el contador fuera de rango                                                                      |
-| D9  | El tiempo se abstrae con un puerto `Ticker` (application)                              | La lógica es testeable sin reloj real; solo el adaptador usa `interval`                                                                                                       |
-| D10 | Formato `mm:ss`                                                                        | El legacy concatenaba `00:` y fallaba con 60 s o más                                                                                                                          |
-| D11 | ESLint impone las reglas de capas (`no-restricted-imports`)                            | Las reglas del §3 se verifican automáticamente                                                                                                                                |
+| ID  | Decisión                                                                                                                           | Motivo                                                                                                                                                                        |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D1  | zone.js en la línea base; zoneless al final                                                                                        | Preservar el legacy (muta campos sin signals) hasta que todo el estado sea signals                                                                                            |
+| D2  | Mantener Karma + Jasmine                                                                                                           | Tooling del proyecto; no se cambia sin necesidad                                                                                                                              |
+| D3  | El repositorio devuelve `Observable`                                                                                               | Simula una fuente asíncrona (HTTP) y permite probar el camino de error                                                                                                        |
+| D4  | El puerto del dominio usa solo `import type { Observable } from 'rxjs'`                                                            | El CHALLENGE ubica el puerto en `domain`; rxjs es una librería de tipos, no el framework. La regla de lint prohíbe `@angular/*` en `domain`. Trade-off aceptado y documentado |
+| D5  | Descanso también tras la última repetición de cada ejercicio                                                                       | Comportamiento legacy y criterio "al terminar descanso se incrementa la repetición"                                                                                           |
+| D6  | Textos de UI en inglés; estados mostrados como `Pending` / `In progress` / `Completed`                                             | Coherencia con el legacy                                                                                                                                                      |
+| D7  | Estado de sesión explícito: `idle`, `running`, `paused`, `finished`                                                                | Distinguir "no iniciada" de "pausada" (Start inicia o reanuda)                                                                                                                |
+| D8  | Al finalizar, el contador muestra `00:00` y Start queda deshabilitado                                                              | Corrige un defecto legacy: tras terminar, Start volvía a correr la sesión con el contador fuera de rango                                                                      |
+| D9  | El tiempo se abstrae con un puerto `Ticker` (application)                                                                          | La lógica es testeable sin reloj real; solo el adaptador usa `interval`                                                                                                       |
+| D10 | Formato `mm:ss`                                                                                                                    | El legacy concatenaba `00:` y fallaba con 60 s o más                                                                                                                          |
+| D11 | ESLint impone las reglas de capas (`no-restricted-imports`)                                                                        | Las reglas del §3 se verifican automáticamente                                                                                                                                |
+| D12 | En estado de error se muestra un botón _Retry_ que vuelve a llamar a `load()`                                                      | Recuperación del error de carga (CA-9) sin recargar la página                                                                                                                 |
+| D13 | Accesibilidad básica: toast con `role="status"` + `aria-live`, ejercicio activo con `aria-current="step"`, botones `type="button"` | Mejora de bajo coste; no es requisito oficial                                                                                                                                 |
 
 ## 4. Diseño: capas y reglas de dependencia
 
@@ -99,6 +101,7 @@ src/app/features/workout/
    ├─ components/exercise-item/  ExerciseItemComponent (+ .spec.ts)
    ├─ components/workout-toast/  WorkoutToastComponent
    └─ utils/format-seconds.ts    (+ .spec.ts)
+   └─ utils/notification-message.ts (+ .spec.ts)
 ```
 
 Composition root: `src/app/app.config.ts` enlaza puertos con adaptadores
@@ -315,6 +318,7 @@ Alternativa intermedia: NgRx SignalStore (`withState`, `withComputed`, `withMeth
 
 ## 12. Historial de cambios de la spec
 
-| Versión | Cambio                                        |
-| ------- | --------------------------------------------- |
-| v1      | Versión inicial aprobada antes de implementar |
+| Versión | Cambio                                                                                |
+| ------- | ------------------------------------------------------------------------------------- |
+| v1      | Versión inicial aprobada antes de implementar                                         |
+| v1.1    | Añadidos D12 (Retry), D13 (accesibilidad) y `notification-message.ts`, surgidos en W4 |
