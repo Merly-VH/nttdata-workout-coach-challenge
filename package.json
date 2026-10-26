@@ -8,7 +8,8 @@
     "test": "ng test --watch=false",
     "lint": "ng lint",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test:ci": "ng test --watch=false --browsers=ChromeHeadless"
   },
   "dependencies": {
     "@angular/animations": "^20.3.0",
