@@ -1,0 +1,12 @@
+<section aria-label="Current exercise">
+  <h2>{{ exerciseName() }}</h2>
+  <div class="phase" [class.rest]="phase() === 'rest' && !finished()">{{ phaseLabel() }}</div>
+  <div class="timer" role="timer">{{ formattedTime() }}</div>
+  <p>Completed repetitions: {{ completedRepetitions() }} / {{ totalRepetitions() }}</p>
+  @if (canPause()) {
+    <button type="button" (click)="pauseRequested.emit()">Pause</button>
+  } @else {
+    <button type="button" [disabled]="!canStart()" (click)="startRequested.emit()">Start</button>
+  }
+  <button type="button" (click)="resetRequested.emit()">Reset</button>
+</section>

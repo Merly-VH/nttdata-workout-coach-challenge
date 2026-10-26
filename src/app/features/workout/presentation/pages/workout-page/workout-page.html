@@ -1,0 +1,33 @@
+<main class="card">
+  <h1>Workout Coach</h1>
+  @switch (store.viewState()) {
+    @case ('loading') {
+      <p>Loading workout…</p>
+    }
+    @case ('error') {
+      <p class="error" role="alert">{{ store.errorMessage() }}</p>
+      <button type="button" (click)="store.load()">Retry</button>
+    }
+    @case ('ready') {
+      @if (store.session(); as session) {
+        @if (store.currentExercise(); as current) {
+          <app-workout-timer
+            [exerciseName]="current.exercise.name"
+            [phase]="session.phase"
+            [remainingSeconds]="session.remainingSeconds"
+            [completedRepetitions]="current.completedRepetitions"
+            [totalRepetitions]="current.exercise.repetitions"
+            [canStart]="store.canStart()"
+            [canPause]="store.canPause()"
+            [finished]="session.status === 'finished'"
+            (startRequested)="store.start()"
+            (pauseRequested)="store.pause()"
+            (resetRequested)="store.reset()"
+          />
+        }
+        <app-workout-toast [message]="toastMessage()" />
+        <app-exercise-list [exercises]="session.exercises" />
+      }
+    }
+  }
+</main>
