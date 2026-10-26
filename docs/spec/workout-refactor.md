@@ -271,13 +271,42 @@ LoadWorkoutUseCase ──> createSession() ──> WorkoutSessionStore (signals)
 
 ## 9. Evidencias de validación
 
-Se completa al final con salidas reales (no se rellena por adelantado):
+Entorno: Windows · Node 24.19.0 · npm 11.17.0 · Chrome · Angular CLI 20.3 (local).
 
-- [ ] `npm run build`: …
-- [ ] `npm run test:ci`: …
-- [ ] `npm run lint`: estado inicial 9 errores → final …
-- [ ] Ejecución CI: enlace …
-- [ ] Prueba manual de CA-1…CA-7: …
+| Verificación | Comando                 | Resultado                                                               |
+| ------------ | ----------------------- | ----------------------------------------------------------------------- |
+| Build        | `npm run build`         | `Application bundle generation complete`; sin `polyfills.js` (zoneless) |
+| Tests        | `npm run test:coverage` | `TOTAL: … SUCCESS`                                                      |
+| Cobertura    | `npm run test:coverage` | Statements …% · Branches …% · Functions …% · Lines …%                   |
+| Lint         | `npm run lint`          | Inicial: 9 errores (legacy) → final: `All files pass linting.`          |
+| Formato      | `npm run format:check`  | `All matched files use Prettier code style!`                            |
+| CI           | GitHub Actions          | … (enlace a la ejecución en verde)                                      |
+
+### Prueba manual (navegador)
+
+| CA   | Observado                                                                              |
+| ---- | -------------------------------------------------------------------------------------- |
+| CA-1 | Al cargar: 3 ejercicios _Pending_, `00:05`, sesión sin iniciar                         |
+| CA-2 | Start: Squats _In progress_, cuenta atrás desde `00:05`                                |
+| CA-3 | A los 5 s: fase _Rest_, `00:03`, toast "Rest time"                                     |
+| CA-4 | Tras el descanso: "Completed repetitions: 1 / 3", toast "Back to exercise"             |
+| CA-5 | ~24 s: Squats _Completed_, Push-ups _In progress_, toast "Next exercise: Push-ups"     |
+| CA-6 | ~48 s: _Finished_, `00:00`, todo _Completed_, "Workout completed", Start deshabilitado |
+| CA-7 | Pause detiene y conserva el tiempo; Start reanuda; Reset vuelve a CA-1                 |
+
+### Trazabilidad criterio → prueba automatizada
+
+| Criterio                           | Archivo(s) de test                                                                |
+| ---------------------------------- | --------------------------------------------------------------------------------- |
+| CA-1…CA-7, CA-10…CA-12             | `domain/rules/workout-session.rules.spec.ts`                                      |
+| CA-1, CA-8, CA-9                   | `application/use-cases/load-workout.use-case.spec.ts`                             |
+| CA-1…CA-3, CA-6…CA-9, CA-11, CA-13 | `application/state/workout-session.store.spec.ts`                                 |
+| CA-10, CA-A3                       | `infrastructure/mappers/exercise.mapper.spec.ts`                                  |
+| CA-13                              | `infrastructure/time/interval-ticker.spec.ts` (`fakeAsync` con `flush: false`)    |
+| CA-1…CA-7, CA-9 (DOM)              | `presentation/pages/workout-page/workout-page.spec.ts`                            |
+| Componente presentacional (§7)     | `workout-timer.spec.ts`, `exercise-item.spec.ts`                                  |
+| CA-A1, CA-A2                       | `npm run lint` (`no-restricted-imports`, `no-explicit-any`, OnPush, control flow) |
+| CA-A4                              | Workflow `.github/workflows/ci.yml`                                               |
 
 ## 10. Extensión técnica: microfrontends y NgRx (diseño, no implementación)
 
@@ -323,3 +352,4 @@ Alternativa intermedia: NgRx SignalStore (`withState`, `withComputed`, `withMeth
 | v1      | Versión inicial aprobada antes de implementar                                         |
 | v1.1    | Añadidos D12 (Retry), D13 (accesibilidad) y `notification-message.ts`, surgidos en W4 |
 | v1.2    | W5 ejecutado: ADR-001 aceptada; zone.js solo en tests                                 |
+| v1.3    | Evidencias de validación y trazabilidad completadas (W6)                              |
