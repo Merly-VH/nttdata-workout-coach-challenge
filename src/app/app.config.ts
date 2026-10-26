@@ -1,4 +1,4 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, provideZonelessChangeDetection } from '@angular/core';
 import { Ticker } from './features/workout/application/ports/ticker';
 import { WorkoutRepository } from './features/workout/domain/ports/workout.repository';
 import { MockWorkoutRepository } from './features/workout/infrastructure/repositories/mock-workout.repository';
@@ -10,6 +10,8 @@ import { IntervalTicker } from './features/workout/infrastructure/time/interval-
  */
 export const appConfig: ApplicationConfig = {
   providers: [
+    // ADR-001: detección de cambios sin zone.js; los signals notifican a Angular qué renderizar.
+    provideZonelessChangeDetection(),
     { provide: WorkoutRepository, useClass: MockWorkoutRepository },
     { provide: Ticker, useClass: IntervalTicker },
   ],
