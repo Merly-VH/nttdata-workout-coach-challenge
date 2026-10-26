@@ -1,6 +1,6 @@
 # Workout Coach: reto Frontend NTT DATA
 
-![CI](https://github.com/<tu-usuario>/<repo>/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/Merly-VH/nttdata-workout-coach-challenge/actions/workflows/ci.yml/badge.svg)
 
 Evolución de una aplicación Angular legacy a **Clean Architecture** con separación
 **Container / Presentational**, **Angular moderno** (signals, `input()`/`output()`, `@if`/`@for`,
