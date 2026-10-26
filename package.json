@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test --watch=false",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@angular/animations": "^20.3.0",
