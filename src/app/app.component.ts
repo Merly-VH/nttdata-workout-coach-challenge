@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
-import { WorkoutTimerComponent } from './features/workout/components/workout-timer/workout-timer';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { WorkoutPageComponent } from './features/workout/presentation/pages/workout-page/workout-page';
+
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [WorkoutTimerComponent],
-  template: `<app-workout-timer />`,
+  imports: [WorkoutPageComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `<app-workout-page />`,
 })
 export class AppComponent {}
