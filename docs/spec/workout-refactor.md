@@ -314,7 +314,7 @@ Alternativa intermedia: NgRx SignalStore (`withState`, `withComputed`, `withMeth
 
 ## 11. ADR
 
-- **ADR-001 (W5):** migración a zoneless (`provideZonelessChangeDetection()`); se documenta al ejecutarla.
+- [ADR-001](../adr/ADR-001-zoneless.md): migración a zoneless (`provideZonelessChangeDetection()`). Aceptada en W5.
 
 ## 12. Historial de cambios de la spec
 
@@ -322,3 +322,4 @@ Alternativa intermedia: NgRx SignalStore (`withState`, `withComputed`, `withMeth
 | ------- | ------------------------------------------------------------------------------------- |
 | v1      | Versión inicial aprobada antes de implementar                                         |
 | v1.1    | Añadidos D12 (Retry), D13 (accesibilidad) y `notification-message.ts`, surgidos en W4 |
+| v1.2    | W5 ejecutado: ADR-001 aceptada; zone.js solo en tests                                 |
