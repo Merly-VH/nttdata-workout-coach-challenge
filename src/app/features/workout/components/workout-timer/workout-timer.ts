@@ -1,11 +1,11 @@
-import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
-import { WorkoutService } from "../../services/workout.service";
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { WorkoutService } from '../../services/workout.service';
 @Component({
-  selector: "app-workout-timer",
+  selector: 'app-workout-timer',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: "./workout-timer.html",
+  templateUrl: './workout-timer.html',
 })
 export class WorkoutTimerComponent {
   exercise: any;
@@ -13,7 +13,7 @@ export class WorkoutTimerComponent {
   completed = 0;
   running = false;
   resting = false;
-  toast = "";
+  toast = '';
   timer: any;
   constructor(private service: WorkoutService) {
     this.exercise = this.service.getWorkout();
@@ -28,16 +28,16 @@ export class WorkoutTimerComponent {
         if (this.resting) {
           this.completed++;
           this.resting = false;
-          this.toast = "Back to exercise";
+          this.toast = 'Back to exercise';
           this.seconds = this.exercise.repetition_time;
           if (this.completed >= this.exercise.repetitions_number) {
             this.running = false;
             clearInterval(this.timer);
-            this.toast = "Workout completed";
+            this.toast = 'Workout completed';
           }
         } else {
           this.resting = true;
-          this.toast = "Rest time";
+          this.toast = 'Rest time';
           this.seconds = this.exercise.rest_time;
         }
       }
@@ -53,6 +53,6 @@ export class WorkoutTimerComponent {
     this.resting = false;
     this.completed = 0;
     this.seconds = this.exercise.repetition_time;
-    this.toast = "";
+    this.toast = '';
   }
 }
